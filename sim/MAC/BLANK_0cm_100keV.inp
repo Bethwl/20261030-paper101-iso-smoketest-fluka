@@ -1,0 +1,65 @@
+* ..+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
+TITLE
+Paper 1 Benchmark FLUKA - BLANK @ 100 keV, th=0.5 cm
+*
+DEFAULTS                                                              PRECISIO  
+LOW-PWXS        -1.0                                                            
+*
+* Nguon photon 100 keV (1.000000E-04 GeV) huong doc truc +z
+* GOAT 2026-10-30: BEAM WHAT(3)=10000 mrad (>2000pi) -> nguon diem dang huong
+BEAM      -1.000E-04              10000.                              PHOTON
+BEAMPOS          0.0       0.0       0.0                                        
+*
+GEOBEGIN                                                              COMBNAME  
+    0    0          Geometry for Paper 1 (MCNPX Benchmark equivalent)
+SPH BLK        0.0 0.0 40.0 120.0
+SPH WORLD      0.0 0.0 40.0 100.0
+RCC COLLOUT    0.0 0.0 10.0 0.0 0.0 40.0 3.0
+RCC COLLIN     0.0 0.0 10.0 0.0 0.0 40.0 0.5
+RCC SAMPLE     0.0 0.0 50.0 0.0 0.0 0.5000 5.0
+RCC DETECT     0.0 0.0 70.0 0.0 0.0 2.0 5.0
+RCC SHIELDO    0.0 0.0 45.0 0.0 0.0 30.0 10.0
+RCC SHIELDI    0.0 0.0 45.0 0.0 0.0 30.0 8.0
+END
+* Regions
+BLKHOLE      5 +BLK -WORLD
+COLLBODY     5 +COLLOUT -COLLIN
+COLLBORE     5 +COLLIN
+SAMPLE       5 +SAMPLE
+DETECT       5 +DETECT
+SHIELD       5 +SHIELDO -SHIELDI
+CHAMBER      5 +SHIELDI -COLLOUT -SAMPLE -DETECT
+AIRVOID      5 +WORLD -SHIELDO -COLLOUT
+END
+GEOEND
+*
+* Dinh nghia nguyen to vat lieu
+MATERIAL           3  -6.94100   0.53400                              LITHIUM   
+MATERIAL           5 -10.81100   2.34000                              BORON     
+MATERIAL          20 -40.07800   1.55000                              CALCIUM   
+MATERIAL          64-157.25000   7.90000                              GADOLINI  
+*
+*
+* Gan vat lieu cho cac vung hinh hoc
+ASSIGNMA    BLCKHOLE   BLKHOLE                                                  
+ASSIGNMA        LEAD  COLLBODY                                                  
+ASSIGNMA      VACUUM  COLLBORE                                                  
+ASSIGNMA      VACUUM    SAMPLE                                                  
+ASSIGNMA      VACUUM    DETECT                                                  
+ASSIGNMA        LEAD    SHIELD                                                  
+ASSIGNMA      VACUUM   CHAMBER                                                  
+ASSIGNMA      VACUUM   AIRVOID                                                  
+*
+* Ha nguong van chuyen xuong 1 keV
+EMFCUT    -1.000E-04 1.000E-06 1.000E-05    VACUUM  @LASTMAT          PROD-CUT  
+EMFCUT    -1.000E-04 1.000E-06             BLKHOLE  @LASTREG                    
+*
+* Scoring: USRTRACK (F4 equivalent track-length fluence)
+USRTRACK           1    PHOTON        21    DETECT 157.07960         1TotFlux   
+USRTRACK   1.050E-04       0.0                                        &         
+USRTRACK           1    PHOTON        22    DETECT 157.07960         1PeakFlux  
+USRTRACK   1.010E-04 9.900E-05                                        &         
+*
+RANDOMIZ           1                                                            
+START      @PRIMARIES@.                                                           
+STOP                                                                            
